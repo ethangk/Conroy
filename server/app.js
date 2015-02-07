@@ -53,9 +53,13 @@ io.on('connection', function(socket){
 		console.log(msg);
 	});
 
-	socket.on('disconnect', jobHandler.leaveJob);
+	socket.on('disconnect', function(msg){
+		jobHandler.leaveJob(msg, socket);
+	});
 
-	socket.on('joinJob', jobHandler.joinJob);
+	socket.on('joinJob', function(msg){
+		jobHandler.joinJob(msg, socket);
+	});
 });
 
 var port = 12345;
