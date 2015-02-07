@@ -15,8 +15,12 @@ io.on('connection', function(socket){
 		console.log(msg);
 	});
 
-  socket.emit('taskRequest', { code: 'console.log("wtf man this is code"); return 6666;' });
-});
+  var taskId = "myid";
+  socket.emit('initTask', {taskId: taskId,
+                           code: 'console.log("wtf man this is code " + data); return data;' });
+  socket.emit('taskPiece', {taskId: taskId, data: 12, pieceId: 1});
+
+})
 
 var port = 12345;
 
