@@ -7,10 +7,12 @@
   "description": "",
   "main": "app.js",
   "dependencies": {
-    "ejs": "socket.io"
+    "ejs": "socket.io",
+    "express": "^4.11.2",
+    "socket.io": "^1.3.3"
   },
   "scripts": {
-    "start": "node app.js",
+    "start": "node app.js"
   },
   "author": "",
   "license": "ISC"
