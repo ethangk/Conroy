@@ -7,7 +7,10 @@ app.get('/', function(req, res){
 });
 
 io.on('connection', function(socket){
-  console.log('a user connected');
+	console.log('a user connected');
+	socket.on('testEvent', function(msg){
+		console.log(msg);
+	});
 });
 
 var port = 12345;
