@@ -21,6 +21,8 @@ socket.on('taskPiece', function(taskPiece) {
     var worker = new Worker("Worker.js"); 
     worker.postMessage({code: task.code, data: taskPiece.data});
     worker.onmessage = function (r) {
+      socket.emit('result',
+                  {taskId: taskPiece.taskId, pieceId: taskPiece.pieceId, result: r.data})
       console.log("result is " + JSON.stringify(r));
     }
   } else {
