@@ -1,0 +1,17 @@
+{
+  "name": "Server",
+  "version": "1.0.0",
+  "engines": {
+    "node": "0.10.x"
+  },
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "ejs": "socket.io"
+  },
+  "scripts": {
+    "start": "node app.js",
+  },
+  "author": "",
+  "license": "ISC"
+}
