@@ -5,6 +5,7 @@ var mongoose = require('mongoose');
 
 var jobs = require('./models/jobs.js');
 
+var jobHandler = require('./jobHandler.js');
 
 mongoose.connect("mongodb://efuser:password123@ds041841.mongolab.com:41841/efhackathon")
 
@@ -51,6 +52,10 @@ io.on('connection', function(socket){
 	socket.on('testEvent', function(msg){
 		console.log(msg);
 	});
+
+	socket.on('disconnect', jobHandler.leaveJob);
+
+	socket.on('joinJob', jobHandler.joinJob);
 });
 
 var port = 12345;
