@@ -1,4 +1,9 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
   var socket = io();
+  setInterval(function(){
+  	console.log("Timeout");
+  	socket.emit('testEvent', "Something something");
+  }, 1000);
+
 </script>
