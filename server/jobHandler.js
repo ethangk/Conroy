@@ -1,12 +1,12 @@
 module.exports = {
-	joinJob: function(msg){
+	joinJob: function(msg, socket){
 		console.log("Joined job",msg.jobId);
 		socket.join(msg.jobId);
 		socket.roomName = msg.jobId;
 		socket.broadcast.emit('clientConnect', {id: socket.id});
 	},
 
-	leaveJob: function() {
+	leaveJob: function(msg, socket) {
 		console.log('Got disconnect!');
 
 
