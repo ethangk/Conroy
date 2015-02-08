@@ -9,7 +9,6 @@ module.exports = {
 	leaveJob: function(msg, socket) {
 		console.log('Got disconnect!');
 
-
 		socket.broadcast.to(socket.roomName).emit('clientDiconnect', {id: socket.id});
 		// socket.broadcast.emit('clientDisconnect', {id: socket.id});
 	}
