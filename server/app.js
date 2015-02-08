@@ -5,6 +5,9 @@ var mongoose = require('mongoose');
 
 var jobs = require('./models/jobs.js');
 
+var jobHandler = require('./jobHandler.js');
+var jobRouter = require('./jobRouter.js');
+
 
 mongoose.connect("mongodb://efuser:password123@ds041841.mongolab.com:41841/efhackathon")
 
@@ -51,6 +54,17 @@ io.on('connection', function(socket){
 	socket.on('testEvent', function(msg){
 		console.log(msg);
 	});
+
+	socket.on('disconnect', function(msg){
+		jobHandler.leaveJob(msg, socket);
+	});
+
+	socket.on('joinJob', function(msg) {
+		jobHandler.joinJob(msg, socket);
+	});
+
+  socket.on('jobStart', function(msg) {jobRouter.jobStart(msg, roomStructure);}
+  socket.on('result', function(msg) {jobRouter.incomingResult(msg);}
 });
 
 var port = 12345;

@@ -15,6 +15,10 @@ io.on('connection', function(socket){
 		console.log(msg);
 	});
 
+  socket.on('result', function(result) {
+    console.log("result received " + JSON.stringify(result));
+  })
+
   var taskId = "myid";
   socket.emit('initTask', {taskId: taskId,
                            code: 'console.log("wtf man this is code " + data); return data;' });
