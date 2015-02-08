@@ -36,12 +36,16 @@
     			</div>
 
     			<script>
+    				var connectedDevices = []; 
+
     				var socket = io("http://localhost:12345");
     				var jobId  = '<%= job.publicId %>';
     				socket.emit('joinJob', {jobId:jobId, role: 'leader'});
     				socket.on('clientConnect', function(msg) {
     					console.log("Connection:");
     					console.log(msg.id);
+    					//connectedDevices.push({msg.id});
+    					//console.log(connectedDevices);
     				});
     				socket.on('clientDisconnect', function(msg){
     					console.log("Disconnected");
