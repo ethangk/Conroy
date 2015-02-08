@@ -75,6 +75,7 @@ function onResult(msg, worker) {
 	//wrong worker
 	return;
   }
+  console.log('finished ' + worker);
   var job = jobs[msg.taskId];
   for (i = 0; i < msg.data.length; i++) {
     var finishedWork = job.underWork[msg.data.pieceId];

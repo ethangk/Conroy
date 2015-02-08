@@ -9,11 +9,12 @@ socket.on('connect', function(){
 });
 
 socket.on('initTask', function(task) {
+  console.log('received');
   runningJobs[task.taskId] = task; // new task to work on
 });
 
 socket.on('taskPiece', function(taskPiece) {
-
+  
   var task = runningJobs[taskPiece.taskId];
   if (task !== undefined) {
 	var data = [];

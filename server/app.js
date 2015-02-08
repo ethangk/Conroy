@@ -80,11 +80,13 @@ io.on('connection', function(socket){
 	});
 
 	socket.on('joinJob', function(msg){
+		console.log(roomsStructure);
 		jobHandler.joinJob(msg, socket, io, roomsStructure);
 	});
 
   socket.on('startJob', function(msg) {
-	jobRouter.jobStart(msg, roomStructure);
+	console.log(roomsStructure);
+	jobRouter.jobStart(msg, roomsStructure);
 });
   socket.on('result', function(msg) {jobRouter.incomingResult(msg, socket.id);});
 });
