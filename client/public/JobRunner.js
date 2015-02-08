@@ -16,10 +16,19 @@ socket.on('taskPiece', function(taskPiece) {
 
   var task = runningJobs[taskPiece.taskId];
   if (task !== undefined) {
-    	var p = new Parallel(taskPiece.data);
+	var data = [];
+	for(var i = 0; i < taskPiece.data.length; i++) {
+		data.push(taskPiece.data[i].value);
+	}
+    	var p = new Parallel(data);
 	eval(task.code);	
 	function ret() {
-		socket.emit(task.ret, arguments);
+		var ret_data = [];
+		for(var i = 0; i < arguments[0].length; i++) {
+			console.log(arguments[0][i]);
+			ret_data.push({value: arguments[0][i], pieceId: taskPiece.data[i].pieceId});
+		}
+		socket.emit(task.ret, {taskId: taskPiece.taskId, data:ret_data});
 	}
 	p.map(remote_fn).then(ret);	
   } else {

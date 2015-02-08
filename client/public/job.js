@@ -10,6 +10,6 @@ function remote_fn(data) {
   return hash;
 }; 
 
- return {value: hashCode(data.value), pieceId: data.pieceId};
+ return hashCode(data);
 
 }
