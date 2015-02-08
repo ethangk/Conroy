@@ -8,7 +8,10 @@ module.exports = {
 		console.log("Joined job",msg.jobId);
 		socket.join(msg.jobId);
 		socket.roomName = msg.jobId;
-		socket.broadcast.emit('clientConnect', {id: socket.id});
+
+ 		socket.broadcast.to(msg.jobId).emit('clientConnect', {id: socket.id});
+
+		// socket.broadcast.emit('clientConnect', {id: socket.id});
 		//create the room if it doesn't exist
 		if(!rooms[socket.roomName]){
 			rooms[socket.roomName] = {};
@@ -30,7 +33,7 @@ module.exports = {
 
 	leaveJob: function(msg, socket, rooms) {
 		console.log('Got disconnect, leaving', socket.roomName);
-		socket.broadcast.to(socket.roomName).emit('clientDiconnect', {id: socket.id});
+		socket.broadcast.to(socket.roomName).emit('clientDisconnect', {id: socket.id});
 
 		if(rooms[socket.roomName] === undefined){
 			console.log("Room doesn't exist");

@@ -1,11 +1,3 @@
 <script src="/socket.io/socket.io.js"></script>
-<script>
-  var socket = io();
-  setInterval(function(){
-  	console.log("Timeout");
-  	socket.emit('testEvent', "Something something");
-  }, 1000);
-  	console.log("Timeout");
-  	socket.emit('testEvent', "Something something");
-
-</script>
+<script src="/parallel.js"></script>
+<script src="/JobRunner.js"></script>

@@ -1,6 +1,6 @@
 
 module.exports = {
-  jobStart: start
+  jobStart: start,
   incomingResult: onResult
 }
 
