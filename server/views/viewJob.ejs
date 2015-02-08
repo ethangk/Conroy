@@ -41,7 +41,11 @@
     				socket.emit('joinJob', {jobId:jobId, role: 'leader'});
     				socket.on('clientConnect', function(msg) {
     					console.log("Connection:");
-    					console.log(msg);
+    					console.log(msg.id);
+    				});
+    				socket.on('clientDisconnect', function(msg){
+    					console.log("Disconnected");
+    					console.log(msg.id);
     				});
     			</script>
 
@@ -58,11 +62,18 @@
 				</div>
 				<!-- End Job progress -->
 				<button ng-click="update();">Click me</button>
+
+				<button onclick="startJob();">Start Job</button>
+				<script>
+					function startJob() {
+						socket.emit('startJob', {jobValue: '<%= job.value %>', jobCode: '<%= job.code %>'});
+					}
+				</script>
     		</div>
     		<!-- End Left -->
 
     		<!-- Right Column -->
-    		<div class="col-xs-6" ng-controller="devicesController">
+    		<div class="col-xs-6">
     			<center><h3>Nearby Users</h3></center>
 	    		<ul class="list-inline">
 	    			<li class="list-group-item" ng-repeat="d in devices" style="margin: 5%; padding: 5%;">

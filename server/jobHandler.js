@@ -31,7 +31,13 @@ module.exports = {
 	leaveJob: function(msg, socket, rooms) {
 		console.log('Got disconnect, leaving', socket.roomName);
 
-		socket.broadcast.to(socket.roomName).emit('clientDiconnect', {id: socket.id});
+		// socket.broadcast.to(socket.roomName).emit('clientDisconnect', {id: socket.id});
+		socket.to(socket.roomName).emit('clientDisconnect', { id: socket.id });
+
+		if(rooms[socket.roomName] === undefined){
+			console.log("Room doesn't exist");
+			return;
+		}
 
 		if(socket.id == rooms[socket.roomName].leader){
 			//we got a big problem...
@@ -39,8 +45,8 @@ module.exports = {
 		}
 		else{
 			var index = rooms[socket.roomName].workers.indexOf(socket.id);
-			console.log("Found index", index, "for worker",socket.id);
-			if(index > 1){
+			// console.log("Found index", index, "for worker",socket.id);
+			if(index > -1){
 				rooms[socket.roomName].workers.splice(index, 1);
 			}
 		}
