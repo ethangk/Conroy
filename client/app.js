@@ -2,6 +2,9 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var fs = require('fs');
+
+var job_code = fs.readFileSync('./public/job.js', {encoding:'utf8'});
 
 app.get('/', function(req, res){
   res.sendFile((__dirname+'/index.html'));
@@ -21,8 +24,15 @@ io.on('connection', function(socket){
 
   var taskId = "myid";
   socket.emit('initTask', {taskId: taskId,
-                           code: 'function remote_fn(data) {console.log("wtf man this is code " + data); return data;}', ret: 'returnFn' });
-  socket.emit('taskPiece', {taskId: taskId, data: 12, pieceId: 1});
+                           code: job_code,
+			   ret: 'returnFn'
+			});
+  var x = [{value:'a', pieceId:1}, {value:'aa', pieceId:2},{value:'aaa', pieceId:3}];
+  socket.emit('taskPiece', {taskId: taskId, data: x});
+
+  socket.on('returnFn',function(arr, pieceId) {
+	console.log(arr);
+  });
 
 })
 
