@@ -23,6 +23,7 @@ var jobLang
 // parse application/json
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/public'));
+app.set('port', (process.env.PORT || 5000));
 
 mongoose.connect("mongodb://efuser:password123@ds041841.mongolab.com:41841/efhackathon");
 
@@ -106,6 +107,6 @@ io.on('connection', function(socket){
 
 var port = 12345;
 
-http.listen(port, function(){
-  console.log('listening on *:',port);
+app.listen(app.get('port'), function() {
+  console.log("Node app is running at localhost:" + app.get('port'));
 });
