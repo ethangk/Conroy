@@ -32,12 +32,12 @@
     		<!-- Left Column -->
     		<div class="col-xs-6" ng-controller="jobsController">
     			<!-- init job -->
-    			<div ng-init="job.publicId = '<%= job.publicId %>'; job.privateId = '<%= job.privateId %>'; job.name = '<%= job.name %>'; job.progress = '<%= job.progress %>';">
+    			<div ng-init="job.publicId = '<%= job.publicId %>'; job.privateId = '<%= job.privateId %>'; job.name = '<%= job.name %>'; job.progress = '<%= job.progress %>'; job.value = '<%= job.value %>'; job.code = '<%= job.code %>'">
     			</div>
 
     			<script>
     				var socket = io("http://localhost:12345");
-    				var jobId  = {{job.publicId}};
+    				var jobId  = '<%= job.publicId %>';
     				socket.emit('joinJob', {jobId:jobId, role: 'leader'});
     				socket.on('clientConnect', function(msg) {
     					console.log("Connection:");

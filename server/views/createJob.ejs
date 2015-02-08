@@ -1,11 +1,47 @@
 <!doctype html>
 <html>
-  <head></head>
+  <head>
+  	<!-- jquery -->
+  	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+
+    <script src="../ng.js"></script>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- end -->
+  </head>
   <body>
-    <form action="/createJob" method="POST">
-      <label>Job Name</label>
-      <input type="text" name="name"/>
-      <button type="submit">Submit</button>
-    </form>
+  	<nav class="navbar navbar-inverse">
+  		<a class="navbar-brand" href="#">P2P Distributed Jobs</a>
+	</nav>
+
+	<center>
+		<h3>Submit job</h3>
+	    <form action="/createJob" method="POST">
+	      <div class="input-group input-group-lg">
+  			<input type="text" class="form-control" aria-describedby="basic-addon1" name="name" placeholder="Insert job name">
+		  </div>
+		  </br>
+		  <div class="input-group input-group-lg">
+  			<input type="text" class="form-control" aria-describedby="basic-addon1" name="jobValue" placeholder="Insert job value to calculate">
+		  </div>
+		  </br>
+		  <div class="input-group input-group-lg">
+  			<textarea class="form-control" aria-describedby="basic-addon1" name="jobCode" placeholder="Insert job code to be run"></textarea>
+		  </div>
+	      <button type="submit" class="btn btn-default">Submit</button>
+	    </form>
+    </center>
   </body>
 </html>

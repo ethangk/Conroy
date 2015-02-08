@@ -40,7 +40,7 @@ app.get('/createJob', function(req,res){
 app.post('/createJob', function(req,res){
 
 	//console.log(req.body);
-	jobs.makeItem(req.body.name, function(err, doc){
+	jobs.makeItem(req.body.name, req.body.jobValue, req.body.jobCode, function(err, doc){
 		if(err){
 			console.log(err);
 			res.send("Error");

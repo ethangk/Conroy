@@ -5,7 +5,9 @@ var schema = mongoose.Schema({
 	name: String,
 	publicId: String,
 	privateId: String,
-	progress: {type: Number, default: 0} 
+	progress: {type: Number, default: 0},
+	value: String,
+	code: String 
 });
 
 var Job = mongoose.model("jobs", schema);
@@ -23,11 +25,11 @@ module.exports = {
 			}
 		});
 	},
-	makeItem: function(name, cb){
-		var len = uuid.v4();
-		var pub = uuid.v4().slice(0, len/2);
-		var pri = uuid.v4().slice(0, len/2);
-		var NJ = new Job({name: name, publicId: pub, privateId: pri});
+	makeItem: function(name, value, code, cb){
+		var pub = Math.random().toString(36).slice(2);
+		var pri = Math.random().toString(36).slice(2);
+		var NJ = new Job({name: name, publicId: pub, privateId: pri, value: value, code: code});
+		console.log(NJ);
 		NJ.save(function(err, doc){
 			if(err){
 				cb(err);
