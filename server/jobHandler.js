@@ -31,7 +31,8 @@ module.exports = {
 	leaveJob: function(msg, socket, rooms) {
 		console.log('Got disconnect, leaving', socket.roomName);
 
-		socket.broadcast.to(socket.roomName).emit('clientDiconnect', {id: socket.id});
+		// socket.broadcast.to(socket.roomName).emit('clientDisconnect', {id: socket.id});
+		socket.to(socket.roomName).emit('clientDisconnect', { id: socket.id });
 
 		if(rooms[socket.roomName] === undefined){
 			console.log("Room doesn't exist");

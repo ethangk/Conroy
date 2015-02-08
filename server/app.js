@@ -9,6 +9,7 @@ var jobHandler = require('./jobHandler.js');
 
 var roomsStructure = {};
 
+
 mongoose.connect("mongodb://efuser:password123@ds041841.mongolab.com:41841/efhackathon")
 
 app.set('view engine', 'ejs');  
