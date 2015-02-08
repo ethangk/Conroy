@@ -76,17 +76,17 @@ io.on('connection', function(socket){
 	});
 
 	socket.on('disconnect', function(msg){
-		jobHandler.leaveJob(msg, socket, io, roomsStructure);
+		jobHandler.leaveJob(msg, socket, roomsStructure);
 	});
 
 	socket.on('joinJob', function(msg){
 		console.log(roomsStructure);
-		jobHandler.joinJob(msg, socket, io, roomsStructure);
+		jobHandler.joinJob(msg, socket, roomsStructure);
 	});
 
   socket.on('startJob', function(msg) {
 	console.log(roomsStructure);
-	jobRouter.jobStart(msg, roomsStructure);
+	jobRouter.jobStart(msg, roomsStructure, io);
 });
   socket.on('result', function(msg) {jobRouter.incomingResult(msg, socket.id);});
 });

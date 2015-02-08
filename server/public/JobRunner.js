@@ -9,12 +9,12 @@ socket.on('connect', function(){
 });
 
 socket.on('initTask', function(task) {
-  console.log('received');
-  runningJobs[task.taskId] = task; // new task to work on
+  console.log('received', task);
+  runningJobs[task.taskID] = task; // new task to work on
 });
 
 socket.on('taskPiece', function(taskPiece) {
-  
+  console.log(runningJobs);
   var task = runningJobs[taskPiece.taskId];
   if (task !== undefined) {
 	var data = [];
@@ -22,6 +22,7 @@ socket.on('taskPiece', function(taskPiece) {
 		data.push(taskPiece.data[i].value);
 	}
     	var p = new Parallel(data);
+    console.log(task.code);
 	eval(task.code);	
 	function ret() {
 		var ret_data = [];

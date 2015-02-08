@@ -75,6 +75,9 @@
     					console.log(msg.id);
     					fillUsers();
     				});
+                    socket.on('finalResults', function(msg){
+                        console.log(msg);
+                    })
     			</script>
 
     			<center><h3>Current job status</h3></center>

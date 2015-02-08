@@ -13,7 +13,7 @@ socket.on('initTask', function(task) {
 });
 
 socket.on('taskPiece', function(taskPiece) {
-
+	console.log(runningJobs);
   var task = runningJobs[taskPiece.taskId];
   if (task !== undefined) {
 	var data = [];
