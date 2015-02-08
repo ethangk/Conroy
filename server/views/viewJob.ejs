@@ -35,6 +35,16 @@
     			<div ng-init="job.publicId = '<%= job.publicId %>'; job.privateId = '<%= job.privateId %>'; job.name = '<%= job.name %>'; job.progress = '<%= job.progress %>';">
     			</div>
 
+    			<script>
+    				var socket = io("http://localhost:12345");
+    				var jobId  = {{job.publicId}};
+    				socket.emit('joinJob', {jobId:jobId, role: 'leader'});
+    				socket.on('clientConnect', function(msg) {
+    					console.log("Connection:");
+    					console.log(msg);
+    				});
+    			</script>
+
     			<center><h3>Current job status</h3></center>
     			<!-- Job name -->
     			<h4 class="list-group-item" style="margin-top:6.5%;">
