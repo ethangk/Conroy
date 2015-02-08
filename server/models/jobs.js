@@ -24,7 +24,10 @@ module.exports = {
 		});
 	},
 	makeItem: function(name, cb){
-		var NJ = new Job({name: name, publicId: uuid.v4(), privateId: uuid.v4()});
+		var len = uuid.v4();
+		var pub = uuid.v4().slice(0, len/2);
+		var pri = uuid.v4().slice(0, len/2);
+		var NJ = new Job({name: name, publicId: pub, privateId: pri});
 		NJ.save(function(err, doc){
 			if(err){
 				cb(err);

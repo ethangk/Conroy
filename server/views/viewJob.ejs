@@ -16,6 +16,8 @@
 
     <script src="../ng.js"></script>
 
+    <script src="/socket.io/socket.io.js"></script>
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- end -->
   </head>
@@ -30,8 +32,7 @@
     		<!-- Left Column -->
     		<div class="col-xs-6" ng-controller="jobsController">
     			<!-- init job -->
-    			<div ng-init="job.publicId = '<%= job.publicId %>'; job.privateId = '<%= job.privateId %>'; job.name = '<%= job.name %>'; job.progress = '<%= job.progress %>'">
-    				{{job.publicId}}
+    			<div ng-init="job.publicId = '<%= job.publicId %>'; job.privateId = '<%= job.privateId %>'; job.name = '<%= job.name %>'; job.progress = '<%= job.progress %>';">
     			</div>
 
     			<center><h3>Current job status</h3></center>

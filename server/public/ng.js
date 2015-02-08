@@ -5,9 +5,8 @@ app.controller('jobsController', ['$scope', function($scope) {
 	$scope.job = {};
 
 	$scope.update = function() {
-		$scope.job.progress += 1;
+		$scope.job.progress = parseInt($scope.job.progress) + 1;
 	}
-
 
 }]);
 
