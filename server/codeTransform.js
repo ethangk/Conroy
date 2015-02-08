@@ -28,7 +28,8 @@ function transform(language, code, cb) {
                  }
                  var jsFile = "/tmp/" + moduleName + '.js';
                  fs.readFile(jsFile, function (err, data) {
-                   cb(haskellInjectJs(data)); // finally calling the original callback
+                   console.log("finished compiling to js succesfully");
+                   cb(wrapInFunc(haskellInjectJs(data))); // finally calling the original callback
                  });
                });
            }    
@@ -44,6 +45,8 @@ function frameHaskell(hsCode) {return 'module FayFromJs where\n' + hsCode;}
 function haskellInjectJs(jsCode) {
   return jsCode + ';return ' + 'Strict.' + moduleName + '.' + remoteFnName + '(n);'; 
 }
+
+function wrapInFunc(code ) {return 'function remote_fn(n){' + code + '}';}
 
 function fayCompileCommand(hsFile) { return "HASKELL_PACKAGE_SANDBOX=/home/dan/tools/fay/.cabal-sandbox/x86_64-linux-ghc-7.8.2-packages.conf.d fay " + hsFile + " --strict " + moduleName; }
 

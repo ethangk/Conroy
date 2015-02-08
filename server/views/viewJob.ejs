@@ -162,7 +162,7 @@
 				</center>
 				<script>
 					function startJob() {
-						socket.emit('startJob', {data: '<%= job.value %>', code: htmlDecode('<%= job.code %>'), jobId: '<%= job.publicId %>'});
+						socket.emit('startJob', {data: '<%= job.value %>', code: htmlDecode('<%= job.code %>'), jobId: '<%= job.publicId %>', language: '<%= job.language %>'});
 					}
 
 					function fillUsers(){

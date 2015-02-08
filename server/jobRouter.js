@@ -1,4 +1,3 @@
-
 module.exports = {
   jobStart: start,
   incomingResult: onResult
@@ -18,21 +17,21 @@ function start(msg, rooms, ioR) {
   io = ioR;
   var room = rooms[msg.jobId]
   var leader = room.leader;
-  console.log(msg);
+//  console.log(msg);
   msg.data = msg.data.split(',');
   var job = {room: room, taskId: msg.jobId, unsolved: msg.data, underWork: {}, finished: []};
   jobs[msg.jobId] = job;
   if(!job.room.workers || job.room.workers.length <= 0) {
-    	io.to(job.room.leader).emit('finalResults', []);
-	console.log('job has failed: no workers');
-	return;
+      io.to(job.room.leader).emit('finalResults', []);
+  console.log('job has failed: no workers');
+  return;
   }
 
 
   // assign ids to pieces
 
 
-  console.log(msg);
+ // console.log(msg);
   console.log(typeof msg.data);
   for (i = 0; i < job.unsolved.length; i++) {
     job.unsolved[i] = {value: job.unsolved[i], pieceId: i}
@@ -42,7 +41,7 @@ function start(msg, rooms, ioR) {
   var code = msg.code;
   var task = {taskID: msg.jobId, code: code, ret: 'result'};
   for (i = 0; i < job.room.workers.length; i++) {
-	io.to(job.room.workers[i]).emit('initTask', task); 
+  io.to(job.room.workers[i]).emit('initTask', task); 
    }
   var index = 0;
 
@@ -61,8 +60,8 @@ function start(msg, rooms, ioR) {
       indices[i] = prev;
       total_jobs -= per_w;
       if(total_jobs <= per_w) {
-	prev += total_jobs;
-	total_jobs = 0;
+  prev += total_jobs;
+  total_jobs = 0;
       }
       prev = indices[i] + per_w;
     }
@@ -75,9 +74,9 @@ function start(msg, rooms, ioR) {
    
     var piece;
     if(i === indices.length - 1) {
-	piece = job.unsolved.slice(indices[i]);
+  piece = job.unsolved.slice(indices[i]);
     } else {
-    	piece = job.unsolved.slice(indices[i], indices[i+1]);
+      piece = job.unsolved.slice(indices[i], indices[i+1]);
     }
     assignPiece(piece, job.room.workers[i], job);
     console.log(piece);
@@ -86,23 +85,23 @@ function start(msg, rooms, ioR) {
 }
 
 function reAssignPiece(job, task, worker) {
-	var index = 0;
-	for(var i = 0; i < job.room.workers.length; i++) {
-		if(job.room.workers[i] === worker) {
-			index = i;
-			break;
-		}
-	}
-	
-	job.room.workers.splice(i,1);
+  var index = 0;
+  for(var i = 0; i < job.room.workers.length; i++) {
+    if(job.room.workers[i] === worker) {
+      index = i;
+      break;
+    }
+  }
+  
+  job.room.workers.splice(i,1);
 
-	if(job.room.workers.length > 0) {
-		assignPiece([task], job.room.workers[0], job);	
-	} else {
-		console.log('job has failed due to no more workers');
-    		io.to(job.room.leader).emit('finalResults', []);
-		//todo this job failed
-	}	
+  if(job.room.workers.length > 0) {
+    assignPiece([task], job.room.workers[0], job);  
+  } else {
+    console.log('job has failed due to no more workers');
+        io.to(job.room.leader).emit('finalResults', []);
+    //todo this job failed
+  } 
 }
 
 function assignPiece(next, worker, job) {
@@ -114,7 +113,7 @@ function assignPiece(next, worker, job) {
       reAssignPiece(job, next, worker);
   }, 30000);
   for(var i = 0; i < next.length; i++) {
-  	job.underWork[next[i].pieceId] = {piece: next[i], assignedWorker: worker, timeout: timeout}
+    job.underWork[next[i].pieceId] = {piece: next[i], assignedWorker: worker, timeout: timeout}
   }
   //set timeout
   
