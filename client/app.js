@@ -21,7 +21,7 @@ io.on('connection', function(socket){
 
   var taskId = "myid";
   socket.emit('initTask', {taskId: taskId,
-                           code: 'console.log("wtf man this is code " + data); return data;' });
+                           code: 'function remote_fn(data) {console.log("wtf man this is code " + data); return data;}', ret: 'returnFn' });
   socket.emit('taskPiece', {taskId: taskId, data: 12, pieceId: 1});
 
 })
