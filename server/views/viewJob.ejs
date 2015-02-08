@@ -79,6 +79,9 @@
                         console.log(msg);
                     });
 
+                    socket.on('jobStatus', function(msg){
+                        console.log(msg);
+                    });
 
                     function htmlDecode(input){
                       var e = document.createElement('div');
