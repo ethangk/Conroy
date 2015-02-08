@@ -29,6 +29,12 @@ mongoose.connect("mongodb://efuser:password123@ds041841.mongolab.com:41841/efhac
 
 app.set('view engine', 'ejs');  
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  next();
+});
+
 app.get('/', function(req, res){
   res.sendFile((__dirname+'/index.html'));
 });
