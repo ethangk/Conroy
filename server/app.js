@@ -86,6 +86,8 @@ io.on('connection', function(socket){
 
   socket.on('startJob', function(msg) {
 	console.log(roomsStructure);
+	msg.code = unescape(msg.code);
+	console.log(msg);
 	jobRouter.jobStart(msg, roomsStructure, io);
 });
   socket.on('result', function(msg) {jobRouter.incomingResult(msg, socket.id);});
