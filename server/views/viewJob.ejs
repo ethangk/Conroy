@@ -36,25 +36,7 @@
     			</div>
 
     			<script>
-	    			// function() {
-	       //          	setInterval(function() {
-	  					// 	if (connectedDevices) {};
-	       //              	$('.deviceId').text(randomnumber);
-	       //          		}, 3000);
-	       //      	});
-
-					var MyArray = function() {
-					    var arr = [];
-					    arr.push = function() {
-					        console.log("PUSHING", arguments);
-					        return Array.prototype.push.apply(this, arguments);
-					    }
-
-					    return arr;
-					};
-
     				var connectedDevices = []; 
-    				// var connectedDevices = MyArray; 
 
     				var socket = io("http://localhost:12345");
     				var jobId  = '<%= job.publicId %>';
@@ -102,7 +84,6 @@
   					</div>
 				</div>
 				<!-- End Job progress -->
-				<button ng-click="update();">Click me</button>
 
 				<button onclick="startJob();">Start Job</button> 
                 <a href="/joinJob/<%= job.publicId %>">Public Link</a>
