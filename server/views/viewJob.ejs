@@ -36,7 +36,25 @@
     			</div>
 
     			<script>
+	    			// function() {
+	       //          	setInterval(function() {
+	  					// 	if (connectedDevices) {};
+	       //              	$('.deviceId').text(randomnumber);
+	       //          		}, 3000);
+	       //      	});
+
+					var MyArray = function() {
+					    var arr = [];
+					    arr.push = function() {
+					        console.log("PUSHING", arguments);
+					        return Array.prototype.push.apply(this, arguments);
+					    }
+
+					    return arr;
+					};
+
     				var connectedDevices = []; 
+    				// var connectedDevices = MyArray; 
 
     				var socket = io("http://localhost:12345");
     				var jobId  = '<%= job.publicId %>';
@@ -44,12 +62,18 @@
     				socket.on('clientConnect', function(msg) {
     					console.log("Connection:");
     					console.log(msg.id);
-    					//connectedDevices.push({msg.id});
-    					//console.log(connectedDevices);
+    					connectedDevices.push(msg.id);
+    					console.log(connectedDevices);
+    					fillUsers();
     				});
     				socket.on('clientDisconnect', function(msg){
     					console.log("Disconnected");
+    					var index = connectedDevices.indexOf(msg.id);
+    					if(index > -1){
+    						connectedDevices.splice(index,1);
+    					}
     					console.log(msg.id);
+    					fillUsers();
     				});
     			</script>
 
@@ -72,6 +96,15 @@
 					function startJob() {
 						socket.emit('startJob', {jobValue: '<%= job.value %>', jobCode: '<%= job.code %>'});
 					}
+
+					function fillUsers(){
+						document.getElementById('userCol').innerHTML = "";
+						var content = "";
+						for (i=0;i<connectedDevices.length;i++){
+							content += "<li>" + connectedDevices[i] + "</li>";
+						}
+						document.getElementById('userCol').innerHTML = content;
+					}
 				</script>
     		</div>
     		<!-- End Left -->
@@ -79,11 +112,11 @@
     		<!-- Right Column -->
     		<div class="col-xs-6">
     			<center><h3>Nearby Users</h3></center>
-	    		<ul class="list-inline">
-	    			<li class="list-group-item" ng-repeat="d in devices" style="margin: 5%; padding: 5%;">
+	    		<ul class="list-inline" id="userCol">
+<!-- 	    			<li class="list-group-item" style="margin: 5%; padding: 5%;">
 	    				<span class="glyphicon glyphicon-user">
-	    				{{d.name}}
-	    			</li>
+	    				<span class="deviceId"></span>
+	    			</li> -->
 	    		</ul>
 	    	</div>
 	    	<!-- End Right -->
