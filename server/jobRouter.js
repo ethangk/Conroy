@@ -120,15 +120,18 @@ function assignPiece(next, worker, job) {
   
 }
 
+
 function onResult(msg, worker, taskId) {
   console.log("ON RESULT");
   console.log(msg);
   var job = jobs[taskId];
   //console.log(job.underWork);
   if(!job.underWork[msg.pieceId] || job.underWork[msg.pieceId].assignedWorker !== worker) {
+
   //wrong worker
   return;
   }
+  io.to(job.room.leader).emit('jobStatus', job.finished.length);
   console.log('finished ' + worker);
 
   // io.to(job.room.leader).emit('jobStatus', {percentage: job});

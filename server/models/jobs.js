@@ -7,7 +7,8 @@ var schema = mongoose.Schema({
 	privateId: String,
 	progress: {type: Number, default: 0},
 	value: Array,
-	code: String 
+	code: String,
+	dataLen: Number
 });
 
 var Job = mongoose.model("jobs", schema);
@@ -32,7 +33,7 @@ module.exports = {
 		for(var i = 0; i<splitVals.length; i++){
 			splitVals[i] = splitVals[i].trim();
 		}
-		var NJ = new Job({name: name, publicId: pub, privateId: pri, value: splitVals, code: code});
+		var NJ = new Job({name: name, publicId: pub, privateId: pri, value: splitVals, code: code, dataLen: splitVals.length});
 		console.log(NJ);
 		NJ.save(function(err, doc){
 			if(err){
