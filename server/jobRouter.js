@@ -23,33 +23,65 @@ function start(msg, rooms) {
   for (i = 0; i < job.unsolved.length; i++) {
     job.unsolved[i] = {value: job.unsolved[i], pieceId: i}
   }
- 
-  for (i = 0; i < workers.length; i++) {
+  var task = {taskID: msg.taskId, code: msg.code};
+  for (i = 0; i < job.room.workers.length; i++) {
+	io.to(job.room.workers[i]).emit('initTask', task); 
+   }
+  var index = 0;
+  for (i = 0; i < job.unsolved.length; i++) {
     // todo: schedule a timer here to remove the job if it timeouts and put it back in 
     // unsolved
-    assignPiece(job, workers[i]);
-    if (job.unsolved.length <= 0) break;
+    assignPiece(job.unsolved.pop(), job.room.workers[index]);
+    index++;
+    if (job.room.workers.length <== index) index = 0;
   }
 }
 
-function assignPiece(job, worker) {
-  var next = job.unsolved.pop() 
+function reAssignPiece(job, task, worker) {
+	var index = 0;
+	for(var i = 0; i < job.room.workers.length; i++) {
+		if(job.room.workers[i] === worker) {
+			index = i;
+			break;
+		}
+	}
+	
+	delete job.room.workers[i];
+
+	if(job.room.workers.length > 0) {
+		assignPiece(task, job.room.workers[0]);	
+	} else {
+		//todo this job failed
+	}	
+}
+
+function assignPiece(next, worker) {
 
   // send 1 item to solve
   io.to(worker).emit('taskPiece', {taskId: job.taskId, data: [next]}) 
-
-  job.underWork[next.pieceId] = {piece: next, assignedWorker: worker}
+  var timeout = setTimeout(function() {
+      reAssignPiece(job, next, worker);
+  }, 30000);
+  job.underWork[next.pieceId] = {piece: next, assignedWorker: worker, timeout: timeout}
+  //set timeout
+  
 }
 
-function onResult(msg) {
+function onResult(msg, worker) {
+
+  if(job.underWork[msg.data.pieceId].assignedWorker !== worker) {
+	//wrong worker
+	return;
+  }
   var job = jobs[msg.taskId];
   for (i = 0; i < msg.data.length; i++) {
     var finishedWork = job.underWork[msg.data.pieceId];
+    clearTimeout(job.underWork[msg.data.pieceId].timeout);
     delete job.underWork[msg.data.pieceId];
     job.finished.push(msg.data[i]);
   }
   if (job.unsolved.length > 1) {
-    assignPiece(job, finishedWork.assignedWorker);
+    assignPiece(job.unsolved.pop(), finishedWork.assignedWorker);
   } else if (job.unsolved.length <= 0 && Object.keys(job.underWork).length) {
     
     // send results to leader
