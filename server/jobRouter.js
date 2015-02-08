@@ -12,18 +12,20 @@ job has
 */
 
 // all running jobs
-var jobs = {}
+var jobs = {};
 
 function start(msg, rooms) {
-  var room = rooms[msg.taskId]
+  var room = rooms[msg.jobId]
   var leader = room.leader
-  var job = {room: room, taskId: msg.taskId, unsolved: msg.data, underWork: {}, finished: []};
-  jobs[msg.taskId] = job;
+  var job = {room: room, taskId: msg.jobId, unsolved: msg.data, underWork: {}, finished: []};
+  jobs[msg.jobId] = job;
   // assign ids to pieces
   for (i = 0; i < job.unsolved.length; i++) {
     job.unsolved[i] = {value: job.unsolved[i], pieceId: i}
   }
-  var task = {taskID: msg.taskId, code: msg.code};
+
+  var code = 'function remote_fn(n){' + code + '}';
+  var task = {taskID: msg.jobId, code: code};
   for (i = 0; i < job.room.workers.length; i++) {
 	io.to(job.room.workers[i]).emit('initTask', task); 
    }
@@ -33,7 +35,7 @@ function start(msg, rooms) {
     // unsolved
     assignPiece(job.unsolved.pop(), job.room.workers[index]);
     index++;
-    if (job.room.workers.length <== index) index = 0;
+    if (job.room.workers.length <= index) index = 0;
   }
 }
 

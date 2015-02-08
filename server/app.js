@@ -83,7 +83,9 @@ io.on('connection', function(socket){
 		jobHandler.joinJob(msg, socket, io, roomsStructure);
 	});
 
-  socket.on('jobStart', function(msg) {jobRouter.jobStart(msg, roomStructure);});
+  socket.on('startJob', function(msg) {
+	jobRouter.jobStart(msg, roomStructure);
+});
   socket.on('result', function(msg) {jobRouter.incomingResult(msg, socket.id);});
 });
 

@@ -57,7 +57,7 @@
     				// var connectedDevices = MyArray; 
 
     				var socket = io("http://localhost:12345");
-    				var jobId  = '<%= job.publicId %>';
+    				var jobId  = '<%= job.publicId =>';
     				socket.emit('joinJob', {jobId:jobId, role: 'leader'});
     				socket.on('clientConnect', function(msg) {
     					console.log("Connection:");
@@ -94,7 +94,7 @@
 				<button onclick="startJob();">Start Job</button>
 				<script>
 					function startJob() {
-						socket.emit('startJob', {jobValue: '<%= job.value %>', jobCode: '<%= job.code %>'});
+						socket.emit('startJob', {data: '<%= job.value %>', code: '<%= job.code %>', jobId: '<%= job.publicId %>'});
 					}
 
 					function fillUsers(){
