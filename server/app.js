@@ -9,6 +9,8 @@ var jobHandler = require('./jobHandler.js');
 var jobRouter = require('./jobRouter.js');
 
 
+var roomsStructure = {};
+
 mongoose.connect("mongodb://efuser:password123@ds041841.mongolab.com:41841/efhackathon")
 
 app.set('view engine', 'ejs');  
@@ -56,11 +58,11 @@ io.on('connection', function(socket){
 	});
 
 	socket.on('disconnect', function(msg){
-		jobHandler.leaveJob(msg, socket);
+		jobHandler.leaveJob(msg, socket, roomsStructure);
 	});
 
-	socket.on('joinJob', function(msg) {
-		jobHandler.joinJob(msg, socket);
+	socket.on('joinJob', function(msg){
+		jobHandler.joinJob(msg, socket, roomsStructure);
 	});
 
   socket.on('jobStart', function(msg) {jobRouter.jobStart(msg, roomStructure);}
