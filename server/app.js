@@ -7,6 +7,8 @@ var jobs = require('./models/jobs.js');
 
 var jobHandler = require('./jobHandler.js');
 
+var roomsStructure = {};
+
 mongoose.connect("mongodb://efuser:password123@ds041841.mongolab.com:41841/efhackathon")
 
 app.set('view engine', 'ejs');  
@@ -54,11 +56,11 @@ io.on('connection', function(socket){
 	});
 
 	socket.on('disconnect', function(msg){
-		jobHandler.leaveJob(msg, socket);
+		jobHandler.leaveJob(msg, socket, roomsStructure);
 	});
 
 	socket.on('joinJob', function(msg){
-		jobHandler.joinJob(msg, socket);
+		jobHandler.joinJob(msg, socket, roomsStructure);
 	});
 });
 

@@ -3,7 +3,7 @@
   var socket = io("http://localhost:12345");
   var jobId = "<%= jobId %>";
   	console.log("Timeout");
-  	socket.emit('joinJob', {jobId:jobId});
+  	socket.emit('joinJob', {jobId:jobId, role: "worker"});
   	socket.on('clientConnect', function(msg){
   		console.log("Got connect event");
   		console.log(msg);
