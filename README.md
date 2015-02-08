@@ -1,2 +1,3 @@
 A method for performing distributed computing through the browser. This was made in 24 hours in a hackathon for the EF selection weekend, and as such, the code is pretty messy. Hopefully I'll get around to cleaning up it up at some point.<br /><br />
 
+The basic idea behind the project is the leader defining a 'map' function and a 'reduce' function, with specified inputs. The inputs will then be farmed out to any 'workers' who have the computation URL open. When work is received, WebWorkers will be spawned to perform the computations in the background, and when their particular computation is complete, they'll send the result to the sever. When the work is complete, the server passes the results back to the 'leader'.
