@@ -1,7 +1,7 @@
 <script src="/parallel.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.3/socket.io.js"></script>
 <script>
-  var socket = io("https://powerful-headland-8594.herokuapp.com");
+  var socket = io("http://powerful-headland-8594.herokuapp.com");
   var jobId = "<%= jobId %>";
   	console.log("Timeout");
   	socket.emit('joinJob', {jobId:jobId, role: "worker"});

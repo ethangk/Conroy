@@ -1,4 +1,4 @@
-var socket = io('http://localhost:12345');
+var socket = io('http://powerful-headland-8594.herokuapp.com');
 
 console.log("running job runner");
 
