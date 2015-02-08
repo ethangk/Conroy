@@ -1,10 +1,16 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
   var socket = io("http://localhost:12345");
-  var jobId = <%= jobId %>;
+  var jobId = "<%= jobId %>";
   	console.log("Timeout");
-  	socket.emit('joinJob', jobId);
+  	socket.emit('joinJob', {jobId:jobId, role: "worker"});
+  	socket.on('clientConnect', function(msg){
+  		console.log("Got connect event");
+  		console.log(msg);
+  	});
 
-  	
-
+  	socket.on('clientDiconnect', function(msg){
+  		console.log("Got disconnect event");
+  		console.log(msg);
+  	})
 </script>

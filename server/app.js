@@ -11,6 +11,10 @@ var jobs = require('./models/jobs.js');
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 
+var jobHandler = require('./jobHandler.js');
+
+var roomsStructure = {};
+
 // parse application/json
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/public'));
@@ -67,6 +71,14 @@ io.on('connection', function(socket){
 	console.log('a user connected');
 	socket.on('testEvent', function(msg){
 		console.log(msg);
+	});
+
+	socket.on('disconnect', function(msg){
+		jobHandler.leaveJob(msg, socket, roomsStructure);
+	});
+
+	socket.on('joinJob', function(msg){
+		jobHandler.joinJob(msg, socket, roomsStructure);
 	});
 });
 
