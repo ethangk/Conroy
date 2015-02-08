@@ -66,6 +66,7 @@ app.get("/viewJob/:privateId", function(req, res) {
 			res.send("Error");
 		}
 		else{
+			doc.code = escape(doc.code);
 			res.render("viewJob",{job: doc});
 		}
 	});
@@ -93,7 +94,7 @@ io.on('connection', function(socket){
 	console.log(msg);
 	jobRouter.jobStart(msg, roomsStructure, io);
 });
-  socket.on('result', function(msg) {jobRouter.incomingResult(msg, socket.id);});
+  socket.on('result', function(msg, id) {jobRouter.incomingResult(msg, socket.id, id);});
 });
 
 var port = 12345;

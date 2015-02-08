@@ -30,25 +30,49 @@ function start(msg, rooms, ioR) {
   }
   console.log(job);
 
-  var code = 'function remote_fn(n){' + msg.code + '}';
-  
-  console.log("the code we are running is " + code);
-
+  var code = msg.code;
   var task = {taskID: msg.jobId, code: code, ret: 'result'};
   for (i = 0; i < job.room.workers.length; i++) {
 	io.to(job.room.workers[i]).emit('initTask', task); 
    }
   var index = 0;
-  for (i = 0, _len = job.unsolved.length; i < _len; i++) {
+
+  var indices = [];
+  var w_len = job.room.workers.length;
+  var per_w = Math.ceil(job.unsolved.length/w_len);
+  var total_jobs = job.unsolved.length;
+  var prev = 0;
+  for(var i = 0; i < job.room.workers.length; i++) {
+    if(total_jobs <= per_w) {
+      indices[i] = prev;
+      break;
+    }
+    else {
+      indices[i] = prev;
+      total_jobs -= per_w;
+      if(total_jobs <= per_w) {
+	prev += total_jobs;
+	total_jobs = 0;
+      }
+      prev = indices[i] + per_w;
+    }
+  }
+  console.log(indices);
+
+ for(var i = 0; i < indices.length; i++) {
     // todo: schedule a timer here to remove the job if it timeouts and put it back in 
     // unsolved
-
-
-    assignPiece(job.unsolved.pop(), job.room.workers[index], job);
-
-    index++;
-    if (job.room.workers.length <= index) index = 0;
+   
+    var piece;
+    if(i === indices.length - 1) {
+	piece = job.unsolved.slice(indices[i]);
+    } else {
+    	piece = job.unsolved.slice(indices[i], indices[i+1]);
+    }
+    assignPiece(piece, job.room.workers[i], job);
+    console.log(piece);
   }
+  job.unsolved = [];
 }
 
 function reAssignPiece(job, task, worker) {
@@ -72,21 +96,25 @@ function reAssignPiece(job, task, worker) {
 function assignPiece(next, worker, job) {
 
   // send 1 item to solve
-  io.to(worker).emit('taskPiece', {taskId: job.taskId, data: [next]}) 
+  io.to(worker).emit('taskPiece', {taskId: job.taskId, data: next}) 
   var timeout = setTimeout(function() {
       reAssignPiece(job, next, worker);
   }, 30000);
-  job.underWork[next.pieceId] = {piece: next, assignedWorker: worker, timeout: timeout}
+  for(var i = 0; i < next.length; i++) {
+  	job.underWork[next[i].pieceId] = {piece: next[i], assignedWorker: worker, timeout: timeout}
+  }
   //set timeout
   
 }
 
-function onResult(msg, worker) {
-  var job = jobs[msg.taskId];
 
-  // console.log(job.underWork);
-  // console.log(msg);
-  if(job.underWork[msg.data[0].pieceId].assignedWorker !== worker) {
+function onResult(msg, worker, taskId) {
+  console.log("ON RESULT");
+  console.log(msg);
+  var job = jobs[taskId];
+  //console.log(job.underWork);
+  if(!job.underWork[msg.pieceId] || job.underWork[msg.pieceId].assignedWorker !== worker) {
+
   //wrong worker
   return;
   }
@@ -94,14 +122,13 @@ function onResult(msg, worker) {
   console.log('finished ' + worker);
 
   // io.to(job.room.leader).emit('jobStatus', {percentage: job});
-  for (i = 0; i < msg.data.length; i++) {
-    var finishedWork = job.underWork[msg.data.pieceId];
-    clearTimeout(job.underWork[msg.data[i].pieceId].timeout);
-    delete job.underWork[msg.data[i].pieceId];
-    job.finished.push(msg.data[i]);
-  }
+    var finishedWork = job.underWork[msg.pieceId];
+    clearTimeout(job.underWork[msg.pieceId].timeout);
+    delete job.underWork[msg.pieceId];
+    job.finished.push(msg);
   if (job.unsolved.length > 1) {
-    assignPiece(job.unsolved.pop(), finishedWork.assignedWorker);
+    console.log(job.unsolved);
+    assignPiece(job.unsolved.pop(), finishedWork.assignedWorker, job);
   } else if (job.unsolved.length <= 0 && Object.keys(job.underWork).length == 0) {
     
     // send results to leader
