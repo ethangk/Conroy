@@ -1,9 +1,15 @@
-var app = require('express')();
+var bodyParser = require('body-parser');
+var express = require('express');
+var app = express();
+
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var mongoose = require('mongoose');
-
+var path = require('path');
 var jobs = require('./models/jobs.js');
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
 
 var jobHandler = require('./jobHandler.js');
 var jobRouter = require('./jobRouter.js');
@@ -11,7 +17,11 @@ var jobRouter = require('./jobRouter.js');
 
 var roomsStructure = {};
 
-mongoose.connect("mongodb://efuser:password123@ds041841.mongolab.com:41841/efhackathon")
+// parse application/json
+app.use(bodyParser.json());
+app.use(express.static(__dirname + '/public'));
+
+mongoose.connect("mongodb://efuser:password123@ds041841.mongolab.com:41841/efhackathon");
 
 app.set('view engine', 'ejs');  
 
@@ -26,30 +36,38 @@ app.get('/joinJob/:jobId', function(req,res){
 });
 
 app.get('/createJob', function(req,res){
-	jobs.makeItem(function(err, doc){
+	res.render("createJob");
+});
+
+app.post('/createJob', function(req,res){
+
+	//console.log(req.body);
+	jobs.makeItem(req.body.name, req.body.jobValue, req.body.jobCode, function(err, doc){
 		if(err){
 			console.log(err);
 			res.send("Error");
 		}
 		else{
-			res.send("Done");
+			res.writeHead(302, {'Location': '/viewJob/'+doc.privateId});
+			res.end();
+			//res.send({redirect: "/"});
 			console.log("Done");
 		}
 	});
 });
 
-app.post('/createJob', function(req,res){
-	jobs.makeItem(function(err, doc){
-		if(err){
-			console.log(err);
+app.get("/viewJob/:privateId", function(req, res) {
+	var id = req.params.privateId;
+	jobs.getItem(id, function(err, doc){
+		if (err){
 			res.send("Error");
 		}
 		else{
-			res.send("Done");
-			console.log("Done");
+			res.render("viewJob",{job: doc});
 		}
 	});
-});
+})
+
 
 io.on('connection', function(socket){
 	console.log('a user connected');

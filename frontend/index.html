@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+  <head>
+  	<!-- jquery -->
+  	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+
+    <script src="app.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- end -->
+  </head>
+  <body ng-app="myApp">
+
+  	<nav class="navbar navbar-inverse">
+  		<a class="navbar-brand" href="#">P2P Distributed Jobs</a>
+	</nav>
+
+    <div class="container-fluid" >
+    	<div class="row">
+    		<!-- Left Column -->
+    		<div class="col-xs-6" ng-controller="jobsController">
+    			<center><h3>Current job status</h3></center>
+    			<!-- Job name -->
+    			<h4 class="list-group-item" style="margin-top:6.5%;">
+    				<center>{{job.name}}</center>
+    			</h4>
+    			<!-- End job name -->
+    			<!-- Job progress -->
+    			<div class="progress">
+  					<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: {{job.progress}}%">
+    					<span class="sr-only">40% Complete (success)</span>
+  					</div>
+				</div>
+				<!-- End Job progress -->
+				<button ng-click="update();">Click me</button>
+    		</div>
+    		<!-- End Left -->
+
+    		<!-- Right Column -->
+    		<div class="col-xs-6" ng-controller="devicesController">
+    			<center><h3>Nearby Users</h3></center>
+	    		<ul class="list-inline">
+	    			<li class="list-group-item" ng-repeat="d in devices" style="margin: 5%; padding: 5%;">
+	    				<span class="glyphicon glyphicon-user">
+	    				{{d.name}}
+	    			</li>
+	    		</ul>
+	    	</div>
+	    	<!-- End Right -->
+	    </div>
+    </div>
+
+  </body>
+</html>
