@@ -58,6 +58,7 @@
 
     				var socket = io("http://localhost:12345");
     				var jobId  = '<%= job.publicId %>';
+                    var dataLen= <%= job.dataLen %>
     				socket.emit('joinJob', {jobId:jobId, role: 'leader'});
     				socket.on('clientConnect', function(msg) {
     					console.log("Connection:");
@@ -77,16 +78,25 @@
     				});
                     socket.on('finalResults', function(msg){
                         console.log(msg);
+                        updateProgressBar(1);
                     });
 
                     socket.on('jobStatus', function(msg){
-                        console.log(msg);
+                        //expect a value which represents the length of the completed array
+                        var completed = parseInt(msg, 10);
+                        updateProgressBar(completed/dataLen);
                     });
 
                     function htmlDecode(input){
                       var e = document.createElement('div');
                       e.innerHTML = input;
                       return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+                    }
+
+                    function updateProgressBar(value){
+                        var parsed = parseInt(value*100, 10);
+                        document.getElementById('progressBar').style.width = parsed+"%";
+                        return;
                     }
     			</script>
 
@@ -98,7 +108,7 @@
     			<!-- End job name -->
     			<!-- Job progress -->
     			<div class="progress">
-  					<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: {{job.progress}}%">
+  					<div class="progress-bar progress-bar-success" id="progressBar" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
   					</div>
 				</div>
 				<!-- End Job progress -->
