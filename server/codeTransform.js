@@ -28,6 +28,7 @@ function transform(language, code, cb) {
                  }
                  var jsFile = "/tmp/" + moduleName + '.js';
                  fs.readFile(jsFile, function (err, data) {
+                   console.log("finished compiling to js succesfully");
                    cb(haskellInjectJs(data)); // finally calling the original callback
                  });
                });

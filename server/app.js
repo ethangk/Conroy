@@ -13,9 +13,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 var jobHandler = require('./jobHandler.js');
 var jobRouter = require('./jobRouter.js');
+var transform = require('./codeTransform.js')
 
 
 var roomsStructure = {};
+
+var jobLang
 
 // parse application/json
 app.use(bodyParser.json());
@@ -41,22 +44,21 @@ app.get('/createJob', function(req,res){
 
 app.post('/createJob', function(req,res){
 
-  // transform the code here
-  console.log("programming language of choice is " + req.body.language);
+  console.log("PROGRAMMING language of choice is " + req.body.language);
 
-	
-	jobs.makeItem(req.body.name, req.body.jobValue, req.body.jobCode, function(err, doc){
-		if(err){
-			console.log(err);
-			res.send("Error");
-		}
-		else{
-			res.writeHead(302, {'Location': '/viewJob/'+doc.privateId});
-			res.end();
-			//res.send({redirect: "/"});
-			console.log("Done");
-		}
-	});
+  // transform the code here
+  jobs.makeItem(req.body.name, req.body.jobValue, req.body.jobCode, req.body.language, function(err, doc){
+    if(err){
+      console.log(err);
+      res.send("Error");
+    }
+    else {
+      res.writeHead(302, {'Location': '/viewJob/'+doc.privateId});
+      res.end();
+      //res.send({redirect: "/"});
+      console.log("Done");
+    }
+  });
 });
 
 app.get("/viewJob/:privateId", function(req, res) {
@@ -88,11 +90,16 @@ io.on('connection', function(socket){
 	});
 
   socket.on('startJob', function(msg) {
-	console.log(roomsStructure);
-	msg.code = unescape(msg.code);
-	console.log(msg);
-	jobRouter.jobStart(msg, roomsStructure, io);
-});
+    console.log("RECEIVED START JOB");
+
+    console.log(roomsStructure);
+    msg.code = unescape(msg.code);
+    console.log(msg);
+    transform.transformCode(msg.language, msg.code, function (transformedCode) {
+       msg.code = transformedCode;
+      jobRouter.jobStart(msg, roomsStructure, io);
+    });
+  });
   socket.on('result', function(msg) {jobRouter.incomingResult(msg, socket.id);});
 });
 

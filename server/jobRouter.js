@@ -15,30 +15,35 @@ job has
 var jobs = {};
 var io;
 function start(msg, rooms, ioR) {
+  console.log("starting the job...");
+
   io = ioR;
   var room = rooms[msg.jobId]
   var leader = room.leader;
-  console.log(msg);
+  //console.log(msg);
   msg.data = msg.data.split(',');
   var job = {room: room, taskId: msg.jobId, unsolved: msg.data, underWork: {}, finished: []};
   jobs[msg.jobId] = job;
   // assign ids to pieces
-  console.log(msg);
+  //console.log(msg);
   console.log(typeof msg.data);
   for (i = 0; i < job.unsolved.length; i++) {
     job.unsolved[i] = {value: job.unsolved[i], pieceId: i}
   }
-  console.log(job);
+  //console.log(job);
 
   var code = 'function remote_fn(n){' + msg.code + '}';
   
-  console.log("the code we are running is " + code);
-
   var task = {taskID: msg.jobId, code: code, ret: 'result'};
+
+  console.log("sending code to remote workers...");
   for (i = 0; i < job.room.workers.length; i++) {
 	io.to(job.room.workers[i]).emit('initTask', task); 
    }
   var index = 0;
+
+  console.log("sending workers their first tasks...");
+
   for (i = 0, _len = job.unsolved.length; i < _len; i++) {
     // todo: schedule a timer here to remove the job if it timeouts and put it back in 
     // unsolved
@@ -84,8 +89,8 @@ function assignPiece(next, worker, job) {
 function onResult(msg, worker) {
   console.log("ON RESULT");
   var job = jobs[msg.taskId];
-  console.log(job.underWork);
-  console.log(msg);
+  //console.log(job.underWork);
+  //console.log(msg);
   if(job.underWork[msg.data[0].pieceId].assignedWorker !== worker) {
   //wrong worker
   return;
