@@ -13,6 +13,7 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+    <script src="/parallel.js"></script>
 
     <script src="../ng.js"></script>
 
@@ -69,6 +70,13 @@
     				var socket = io("http://localhost:12345");
     				var jobId  = '<%= job.publicId %>';
                     var dataLen= <%= job.dataLen %>
+
+
+
+                    var fn = function(arr){
+                        return (<%= job.reduceCode %>)(arr);
+                    };
+
     				socket.emit('joinJob', {jobId:jobId, role: 'leader'});
     				socket.on('clientConnect', function(msg) {
     					console.log("Connection:");
@@ -96,8 +104,12 @@
                         for(var i = 0; i < msg.length; i++){
                         	finalResults.push(msg[i]);
                         }
-                        fillResults();
+
+                        fn(finalResults);
+
+                        // fillResults();
                         toggleSpinner();
+
 
                     });
 

@@ -8,6 +8,7 @@ var schema = mongoose.Schema({
 	progress: {type: Number, default: 0},
 	value: Array,
 	code: String,
+	reduceCode: String,
 	dataLen: Number
 });
 
@@ -26,14 +27,14 @@ module.exports = {
 			}
 		});
 	},
-	makeItem: function(name, value, code, cb){
+	makeItem: function(name, value, code, reduceCode, cb){
 		var pub = Math.random().toString(36).slice(2);
 		var pri = Math.random().toString(36).slice(2);
 		var splitVals = value.split('\n');
 		for(var i = 0; i<splitVals.length; i++){
 			splitVals[i] = splitVals[i].trim();
 		}
-		var NJ = new Job({name: name, publicId: pub, privateId: pri, value: splitVals, code: code, dataLen: splitVals.length});
+		var NJ = new Job({name: name, publicId: pub, privateId: pri, value: splitVals, code: code, dataLen: splitVals.length, reduceCode: reduceCode});
 		console.log(NJ);
 		NJ.save(function(err, doc){
 			if(err){

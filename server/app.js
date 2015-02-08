@@ -45,7 +45,7 @@ app.post('/createJob', function(req,res){
   console.log("programming language of choice is " + req.body.language);
 
 	
-	jobs.makeItem(req.body.name, req.body.jobValue, req.body.jobCode, function(err, doc){
+	jobs.makeItem(req.body.name, req.body.jobValue, req.body.jobCode, req.body.reduceCode, function(err, doc){
 		if(err){
 			console.log(err);
 			res.send("Error");

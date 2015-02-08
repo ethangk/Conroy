@@ -110,7 +110,7 @@ function assignPiece(next, worker, job) {
 
 function onResult(msg, worker, taskId) {
   console.log("ON RESULT");
-  console.log(msg);
+  // console.log(msg);
   var job = jobs[taskId];
   //console.log(job.underWork);
   if(!job.underWork[msg.pieceId] || job.underWork[msg.pieceId].assignedWorker !== worker) {
