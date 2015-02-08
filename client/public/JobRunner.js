@@ -9,20 +9,19 @@ socket.on('connect', function(){
 });
 
 socket.on('initTask', function(task) {
-  console.log("new task received " +  JSON.stringify(task));
   runningJobs[task.taskId] = task; // new task to work on
 });
 
 socket.on('taskPiece', function(taskPiece) {
-  console.log("job received " +  JSON.stringify(taskPiece));
 
   var task = runningJobs[taskPiece.taskId];
   if (task !== undefined) {
-    var worker = new Worker("Worker.js"); 
-    worker.postMessage({code: task.code, data: taskPiece.data});
-    worker.onmessage = function (r) {
-      console.log("result is " + JSON.stringify(r));
-    }
+    	var p = new Parallel(taskPiece.data);
+	eval(task.code);	
+	function ret() {
+		socket.emit(task.ret, arguments);
+	}
+	p.map(remote_fn).then(ret);	
   } else {
     console.log("non-existing job for that piece. ignore");
   }
