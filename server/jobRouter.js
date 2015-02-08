@@ -91,6 +91,8 @@ function onResult(msg, worker) {
   return;
   }
   console.log('finished ' + worker);
+
+  // io.to(job.room.leader).emit('jobStatus', {percentage: job});
   for (i = 0; i < msg.data.length; i++) {
     var finishedWork = job.underWork[msg.data.pieceId];
     clearTimeout(job.underWork[msg.data[i].pieceId].timeout);
