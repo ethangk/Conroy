@@ -6,7 +6,7 @@ var schema = mongoose.Schema({
 	publicId: String,
 	privateId: String,
 	progress: {type: Number, default: 0},
-	value: String,
+	value: Array,
 	code: String 
 });
 
@@ -28,13 +28,14 @@ module.exports = {
 	makeItem: function(name, value, code, cb){
 		var pub = Math.random().toString(36).slice(2);
 		var pri = Math.random().toString(36).slice(2);
-		var NJ = new Job({name: name, publicId: pub, privateId: pri, value: value, code: code});
+		var NJ = new Job({name: name, publicId: pub, privateId: pri, value: value.split('\r\n'), code: code});
 		console.log(NJ);
 		NJ.save(function(err, doc){
 			if(err){
 				cb(err);
 			}
 			else{
+				console.log(doc);
 				cb(null, doc);
 			}
 		});

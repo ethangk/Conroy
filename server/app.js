@@ -23,6 +23,7 @@ app.use(express.static(__dirname + '/public'));
 
 mongoose.connect("mongodb://efuser:password123@ds041841.mongolab.com:41841/efhackathon");
 
+
 app.set('view engine', 'ejs');  
 
 app.get('/', function(req, res){
@@ -41,7 +42,7 @@ app.get('/createJob', function(req,res){
 
 app.post('/createJob', function(req,res){
 
-	//console.log(req.body);
+	
 	jobs.makeItem(req.body.name, req.body.jobValue, req.body.jobCode, function(err, doc){
 		if(err){
 			console.log(err);
@@ -76,11 +77,11 @@ io.on('connection', function(socket){
 	});
 
 	socket.on('disconnect', function(msg){
-		jobHandler.leaveJob(msg, socket, roomsStructure);
+		jobHandler.leaveJob(msg, socket, io, roomsStructure);
 	});
 
 	socket.on('joinJob', function(msg){
-		jobHandler.joinJob(msg, socket, roomsStructure);
+		jobHandler.joinJob(msg, socket, io, roomsStructure);
 	});
 
   socket.on('jobStart', function(msg) {jobRouter.jobStart(msg, roomStructure);});
