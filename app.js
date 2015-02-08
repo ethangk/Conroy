@@ -2,6 +2,12 @@ var bodyParser = require('body-parser');
 var express = require('express');
 var app = express();
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  next();
+});
+
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var mongoose = require('mongoose');
@@ -18,8 +24,6 @@ var transform = require('./codeTransform.js')
 
 var roomsStructure = {};
 
-var jobLang
-
 // parse application/json
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/public'));
@@ -29,11 +33,6 @@ mongoose.connect("mongodb://efuser:password123@ds041841.mongolab.com:41841/efhac
 
 app.set('view engine', 'ejs');  
 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");
-  next();
-});
 
 app.get('/', function(req, res){
   res.sendFile((__dirname+'/index.html'));
