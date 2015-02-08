@@ -41,6 +41,9 @@ app.get('/createJob', function(req,res){
 
 app.post('/createJob', function(req,res){
 
+  // transform the code here
+  console.log("programming language of choice is " + req.body.language);
+
 	
 	jobs.makeItem(req.body.name, req.body.jobValue, req.body.jobCode, function(err, doc){
 		if(err){

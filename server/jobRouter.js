@@ -31,6 +31,9 @@ function start(msg, rooms, ioR) {
   console.log(job);
 
   var code = 'function remote_fn(n){' + msg.code + '}';
+  
+  console.log("the code we are running is " + code);
+
   var task = {taskID: msg.jobId, code: code, ret: 'result'};
   for (i = 0; i < job.room.workers.length; i++) {
 	io.to(job.room.workers[i]).emit('initTask', task); 
