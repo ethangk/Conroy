@@ -101,7 +101,7 @@
 						document.getElementById('userCol').innerHTML = "";
 						var content = "";
 						for (i=0;i<connectedDevices.length;i++){
-							content += "<li>" + connectedDevices[i] + "</li>";
+							content += '<li class="list-group-item" style="margin: 5%; padding: 5%;">' + connectedDevices[i] +'</li>';
 						}
 						document.getElementById('userCol').innerHTML = content;
 					}
