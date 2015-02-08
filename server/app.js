@@ -46,19 +46,18 @@ app.post('/createJob', function(req,res){
 
   console.log("PROGRAMMING language of choice is " + req.body.language);
 
-  // transform the code here
-  jobs.makeItem(req.body.name, req.body.jobValue, req.body.jobCode, req.body.language, function(err, doc){
-    if(err){
-      console.log(err);
-      res.send("Error");
-    }
-    else {
-      res.writeHead(302, {'Location': '/viewJob/'+doc.privateId});
-      res.end();
-      //res.send({redirect: "/"});
-      console.log("Done");
-    }
-  });
+	jobs.makeItem(req.body.name, req.body.jobValue, req.body.jobCode, req.body.language, req.body.reduceCode, function(err, doc){
+		if(err){
+			console.log(err);
+			res.send("Error");
+		}
+		else{
+			res.writeHead(302, {'Location': '/viewJob/'+doc.privateId});
+			res.end();
+			//res.send({redirect: "/"});
+			console.log("Done");
+		}
+	});
 });
 
 app.get("/viewJob/:privateId", function(req, res) {
@@ -68,6 +67,7 @@ app.get("/viewJob/:privateId", function(req, res) {
 			res.send("Error");
 		}
 		else{
+			doc.code = escape(doc.code);
 			res.render("viewJob",{job: doc});
 		}
 	});
@@ -100,7 +100,8 @@ io.on('connection', function(socket){
       jobRouter.jobStart(msg, roomsStructure, io);
     });
   });
-  socket.on('result', function(msg) {jobRouter.incomingResult(msg, socket.id);});
+
+  socket.on('result', function(msg, id) {jobRouter.incomingResult(msg, socket.id, id);});
 });
 
 var port = 12345;
