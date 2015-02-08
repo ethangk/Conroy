@@ -17,7 +17,8 @@ var io;
 function start(msg, rooms, ioR) {
   io = ioR;
   var room = rooms[msg.jobId]
-  var leader = room.leader
+  var leader = room.leader;
+  console.log(msg);
   msg.data = msg.data.split(',');
   var job = {room: room, taskId: msg.jobId, unsolved: msg.data, underWork: {}, finished: []};
   jobs[msg.jobId] = job;
