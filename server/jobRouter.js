@@ -22,7 +22,16 @@ function start(msg, rooms, ioR) {
   msg.data = msg.data.split(',');
   var job = {room: room, taskId: msg.jobId, unsolved: msg.data, underWork: {}, finished: []};
   jobs[msg.jobId] = job;
+  if(!job.room.workers || job.room.workers.length <= 0) {
+    	io.to(job.room.leader).emit('finalResults', []);
+	console.log('job has failed: no workers');
+	return;
+  }
+
+
   // assign ids to pieces
+
+
   console.log(msg);
   console.log(typeof msg.data);
   for (i = 0; i < job.unsolved.length; i++) {
@@ -39,6 +48,7 @@ function start(msg, rooms, ioR) {
 
   var indices = [];
   var w_len = job.room.workers.length;
+  
   var per_w = Math.ceil(job.unsolved.length/w_len);
   var total_jobs = job.unsolved.length;
   var prev = 0;
@@ -84,11 +94,13 @@ function reAssignPiece(job, task, worker) {
 		}
 	}
 	
-	delete job.room.workers[i];
+	job.room.workers.splice(i,1);
 
 	if(job.room.workers.length > 0) {
-		assignPiece(task, job.room.workers[0], job);	
+		assignPiece([task], job.room.workers[0], job);	
 	} else {
+		console.log('job has failed due to no more workers');
+    		io.to(job.room.leader).emit('finalResults', []);
 		//todo this job failed
 	}	
 }
@@ -98,6 +110,7 @@ function assignPiece(next, worker, job) {
   // send 1 item to solve
   io.to(worker).emit('taskPiece', {taskId: job.taskId, data: next}) 
   var timeout = setTimeout(function() {
+      console.log('reassigned');
       reAssignPiece(job, next, worker);
   }, 30000);
   for(var i = 0; i < next.length; i++) {
