@@ -94,7 +94,8 @@
 				<!-- End Job progress -->
 				<button ng-click="update();">Click me</button>
 
-				<button onclick="startJob();">Start Job</button>
+				<button onclick="startJob();">Start Job</button> 
+                <a href="/joinJob/<%= job.publicId %>">Public Link</a>
 				<script>
 					function startJob() {
 						socket.emit('startJob', {data: '<%= job.value %>', code: '<%= job.code %>', jobId: '<%= job.publicId %>'});
