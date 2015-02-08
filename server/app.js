@@ -66,8 +66,8 @@ io.on('connection', function(socket){
 		jobHandler.joinJob(msg, socket, roomsStructure);
 	});
 
-  socket.on('jobStart', function(msg) {jobRouter.jobStart(msg, roomStructure);}
-  socket.on('result', function(msg) {jobRouter.incomingResult(msg);}
+  socket.on('jobStart', function(msg) {jobRouter.jobStart(msg, roomStructure);});
+  socket.on('result', function(msg) {jobRouter.incomingResult(msg);});
 });
 
 var port = 12345;
