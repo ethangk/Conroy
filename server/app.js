@@ -76,11 +76,11 @@ io.on('connection', function(socket){
 	});
 
 	socket.on('disconnect', function(msg){
-		jobHandler.leaveJob(msg, socket, roomsStructure);
+		jobHandler.leaveJob(msg, socket, io, roomsStructure);
 	});
 
 	socket.on('joinJob', function(msg){
-		jobHandler.joinJob(msg, socket, roomsStructure);
+		jobHandler.joinJob(msg, socket, io, roomsStructure);
 	});
 
   socket.on('jobStart', function(msg) {jobRouter.jobStart(msg, roomStructure);});
