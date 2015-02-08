@@ -5,7 +5,7 @@
     "node": "0.10.x"
   },
   "description": "",
-  "main": "server/app.js",
+  "main": "app.js",
   "dependencies": {
     "ejs": "*",
     "express": "^4.11.2",
@@ -16,7 +16,7 @@
     "nodemon":"*"
   },
   "scripts": {
-    "start": "node server/app.js"
+    "start": "node app.js"
   },
   "author": "",
   "license": "ISC"

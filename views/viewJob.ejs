@@ -1,0 +1,202 @@
+<!doctype html>
+<html>
+  <head>
+  	<!-- jquery -->
+  	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+    <script src="/parallel.js"></script>
+
+    <script src="../ng.js"></script>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style type="text/css">
+    	.spinner {
+		  display: inline-block;
+		  opacity: 0;
+		  width: 0;
+
+		  -webkit-transition: opacity 0.25s, width 0.25s;
+		  -moz-transition: opacity 0.25s, width 0.25s;
+		  -o-transition: opacity 0.25s, width 0.25s;
+		  transition: opacity 0.25s, width 0.25s;
+		}
+
+		.has-spinner.active {
+		  cursor:progress;
+		}
+
+		.has-spinner.active .spinner {
+		  opacity: 1;
+		  width: auto;
+		}
+
+		.has-spinner.btn.active .spinner {
+		    width: 16px;
+		}
+
+    </style>
+    <!-- end -->
+  </head>
+  <body ng-app="myApp">
+
+  	<nav class="navbar navbar-inverse">
+  		<a class="navbar-brand" href="#">P2P Distributed Jobs</a>
+	</nav>
+
+    <div class="container-fluid" >
+    	<div class="row">
+    		<!-- Left Column -->
+    		<div class="col-xs-6" ng-controller="jobsController">
+    			<!-- init job -->
+    			<div ng-init="job.publicId = '<%= job.publicId %>'; job.privateId = '<%= job.privateId %>'; job.name = '<%= job.name %>'; job.progress = '<%= job.progress %>'; job.value = '<%= job.value %>'; job.code = '<%= job.code %>'">
+    			</div>
+
+    			<script>
+    				var connectedDevices = []; 
+    				var finalResults = [];
+
+    				var socket = io("http://localhost:12345");
+    				var jobId  = '<%= job.publicId %>';
+                    var dataLen= <%= job.dataLen %>
+
+
+
+                    var fn = function(arr){
+                        return (<%= job.reduceCode %>)(arr);
+                    };
+
+    				socket.emit('joinJob', {jobId:jobId, role: 'leader'});
+    				socket.on('clientConnect', function(msg) {
+    					console.log("Connection:");
+    					console.log(msg.id);
+    					connectedDevices.push(msg.id);
+    					console.log(connectedDevices);
+    					fillUsers();
+    				});
+    				socket.on('clientDisconnect', function(msg){
+    					console.log("Disconnected");
+    					var index = connectedDevices.indexOf(msg.id);
+    					if(index > -1){
+    						connectedDevices.splice(index,1);
+    					}
+    					console.log(msg.id);
+    					fillUsers();
+    				});
+                    socket.on('finalResults', function(msg){
+                        console.log(msg);
+                        updateProgressBar(1);
+                        finalResults = [];
+                        if (msg.length === 0) {
+                        	finalResults.push('Error');
+                        }
+                        for(var i = 0; i < msg.length; i++){
+                        	finalResults.push(msg[i]);
+                        }
+
+                        fn(finalResults);
+
+                        // fillResults();
+                        toggleSpinner();
+
+
+                    });
+
+                    socket.on('jobStatus', function(msg){
+                        //expect a value which represents the length of the completed array
+                        var completed = parseInt(msg, 10);
+                        updateProgressBar(completed/dataLen);
+                    });
+
+                    function htmlDecode(input){
+                      var e = document.createElement('div');
+                      e.innerHTML = unescape(input);
+                      return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+                    }
+
+                    function updateProgressBar(value){
+                        var parsed = parseInt(value*100, 10);
+                        document.getElementById('progressBar').style.width = parsed+"%";
+                        return;
+                    }
+    			</script>
+
+    			<center><h3>Current job status</h3></center>
+    			<!-- Job name -->
+    			<h4 class="list-group-item" style="margin-top:6.5%;">
+    				<center>{{job.name}}</center>
+    			</h4>
+    			<!-- End job name -->
+    			<!-- Job progress -->
+    			<div class="progress">
+  					<div class="progress-bar progress-bar-success" id="progressBar" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+  					</div>
+				</div>
+				<!-- End Job progress -->
+				<script>
+					function toggleSpinner() {
+        				$('button').toggleClass('active');
+					}
+				</script>
+				<center>
+					<p>
+					  <button class="btn-success has-spinner" onclick="startJob();toggleSpinner();">
+					    <span class="spinner"><i class="icon-spin icon-refresh"></i></span>
+					    Start Job
+					  </button>
+					</p>
+                	<a href="/joinJob/<%= job.publicId %>">Public Link</a>
+
+                	<div id="results"></div>
+				</center>
+				<script>
+					function startJob() {
+						socket.emit('startJob', {data: '<%= job.value %>', code: htmlDecode('<%= job.code %>'), jobId: '<%= job.publicId %>', language: '<%= job.language %>'});
+					}
+
+					function fillUsers(){
+						document.getElementById('userCol').innerHTML = "";
+						var content = "";
+						for (i=0;i<connectedDevices.length;i++){
+							content += '<li class="list-group-item" style="margin: 5%; padding: 5%;">' + connectedDevices[i] +'</li>';
+						}
+						document.getElementById('userCol').innerHTML = content;
+					}
+
+					function fillResults() {
+						document.getElementById('results').innerHTML = "";
+						var content = "";
+						for(var i = 0; i<finalResults.length;i++){
+							content += '<p>' + finalResults[i] + '</p>';
+						}
+
+						document.getElementById('results').innerHTML = content;
+
+					}
+				</script>
+    		</div>
+    		<!-- End Left -->
+
+    		<!-- Right Column -->
+    		<div class="col-xs-6">
+    			<center><h3>Nearby Users</h3></center>
+	    		<ul class="list-inline" id="userCol"></ul>
+	    	</div>
+	    	<!-- End Right -->
+	    </div>
+    </div>
+
+  </body>
+</html>
+
