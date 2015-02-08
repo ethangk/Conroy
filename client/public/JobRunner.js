@@ -28,6 +28,11 @@ socket.on('taskPiece', function(taskPiece) {
 
 });
 
+
+socket.on('finishJob', function (taskId)  {
+  delete runningJobs[taskId]
+});
+
 socket.on('disconnect', function(){
   console.log("disconnect happened");
 
