@@ -4,7 +4,8 @@ var uuid = require('node-uuid');
 var schema = mongoose.Schema({
 	name: String,
 	publicId: String,
-	privateId: String
+	privateId: String,
+	progress: {type: Number, default: 0} 
 });
 
 var Job = mongoose.model("jobs", schema);

@@ -1,9 +1,11 @@
 var bodyParser = require('body-parser');
-var app = require('express')();
+var express = require('express');
+var app = express();
+
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var mongoose = require('mongoose');
-
+var path = require('path');
 var jobs = require('./models/jobs.js');
 
 // parse application/x-www-form-urlencoded
@@ -11,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
 app.use(bodyParser.json());
-
+app.use(express.static(__dirname + '/public'));
 
 mongoose.connect("mongodb://efuser:password123@ds041841.mongolab.com:41841/efhackathon");
 
