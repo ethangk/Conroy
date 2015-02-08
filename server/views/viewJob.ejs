@@ -19,6 +19,33 @@
     <script src="/socket.io/socket.io.js"></script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style type="text/css">
+    	.spinner {
+		  display: inline-block;
+		  opacity: 0;
+		  width: 0;
+
+		  -webkit-transition: opacity 0.25s, width 0.25s;
+		  -moz-transition: opacity 0.25s, width 0.25s;
+		  -o-transition: opacity 0.25s, width 0.25s;
+		  transition: opacity 0.25s, width 0.25s;
+		}
+
+		.has-spinner.active {
+		  cursor:progress;
+		}
+
+		.has-spinner.active .spinner {
+		  opacity: 1;
+		  width: auto;
+		}
+
+		.has-spinner.btn.active .spinner {
+		    width: 16px;
+		}
+
+    </style>
     <!-- end -->
   </head>
   <body ng-app="myApp">
@@ -37,6 +64,7 @@
 
     			<script>
     				var connectedDevices = []; 
+    				var finalResults = [];
 
     				var socket = io("http://localhost:12345");
     				var jobId  = '<%= job.publicId %>';
@@ -59,6 +87,15 @@
     				});
                     socket.on('finalResults', function(msg){
                         console.log(msg);
+                        if (msg.length === 0) {
+                        	finalResults.push('Error');
+                        }
+                        for(var i = 0; i < msg.length; i++){
+                        	finalResults.push(msg[i]);
+                        }
+                        finalResults();
+                        toggleSpinner();
+
                     });
 
                     socket.on('jobStatus', function(msg){
@@ -84,9 +121,22 @@
   					</div>
 				</div>
 				<!-- End Job progress -->
+				<script>
+					function toggleSpinner() {
+        				$('button').toggleClass('active');
+					}
+				</script>
+				<center>
+					<p>
+					  <button class="btn-success has-spinner" onclick="startJob();toggleSpinner();">
+					    <span class="spinner"><i class="icon-spin icon-refresh"></i></span>
+					    Start Job
+					  </button>
+					</p>
+                	<a href="/joinJob/<%= job.publicId %>">Public Link</a>
 
-				<button onclick="startJob();">Start Job</button> 
-                <a href="/joinJob/<%= job.publicId %>">Public Link</a>
+                	<div id="results"></div>
+				</center>
 				<script>
 					function startJob() {
 						socket.emit('startJob', {data: '<%= job.value %>', code: htmlDecode('<%= job.code %>'), jobId: '<%= job.publicId %>'});
@@ -99,6 +149,18 @@
 							content += '<li class="list-group-item" style="margin: 5%; padding: 5%;">' + connectedDevices[i] +'</li>';
 						}
 						document.getElementById('userCol').innerHTML = content;
+					}
+
+					function fillResults() {
+						document.getElementById('results').innerHTML = "";
+						var content = "";
+
+						for(var i = 0; finalResults.length;i++){
+							content += '<p>' + finalResults[i] + '</p>';
+						}
+
+						document.getElementById('results').innerHTML = content;
+
 					}
 				</script>
     		</div>
