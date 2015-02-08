@@ -30,24 +30,24 @@
 		<h3>Submit job</h3>
 	    <form action="/createJob" method="POST">
 	      <div class="input-group input-group-lg">
-  			<input type="text" class="form-control" aria-describedby="basic-addon1" name="name" placeholder="Insert job name">
+  			<input required type="text" class="form-control" aria-describedby="basic-addon1" name="name" placeholder="Insert job name">
 		  </div>
 		  </br>
 		  <div class="input-group input-group-lg">
-  			<textarea type="text" class="form-control" aria-describedby="basic-addon1" name="jobValue" placeholder="Insert job value to calculate"  style="height: 200px;"></textarea>
+  			<textarea required type="text" class="form-control" aria-describedby="basic-addon1" name="jobValue" placeholder="Insert job value to calculate"  style="height: 200px;"></textarea>
 		  </div>
 		  </br>
 		  <div class="input-group">
   			<input type="radio" name="language" value="Haskell"> Haskell </input>
-  			<input type="radio" name="language" value="Javascript"> Javascript </input>
+  			<input required type="radio" checked name="language" value="Javascript"> Javascript </input>
 		  </div>
 		  </br>
 		  <div class="wrapper" style="width: 50%;">
-  		  	<textarea class="form-control" name="jobCode" rows="7" placeholder="Insert job code to be run"></textarea>
+  		  	<textarea required class="form-control" name="jobCode" rows="7" placeholder="Insert job code to be run"></textarea>
   		  </div>
 		  </br>
 		  <div class="wrapper" style="width: 50%;">
-  		  	<textarea class="form-control" name="reduceCode" rows="7" placeholder="Insert reduce code to be run"></textarea>
+  		  	<textarea required class="form-control" name="reduceCode" rows="7" placeholder="Insert reduce code to be run"></textarea>
   		  </div>
   		  <br />
 	      <button type="submit" class="btn btn-default">Submit</button>
